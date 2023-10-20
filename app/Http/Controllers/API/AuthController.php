@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 
@@ -21,6 +21,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // register logic
+        dd('register', $request->all());
     }
 
 
@@ -32,6 +33,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // login logic
+        dd('login', $request->all());
     }
 
     
@@ -42,5 +44,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // logout logic
+        dd('logout', $request->all());
     }
 }
