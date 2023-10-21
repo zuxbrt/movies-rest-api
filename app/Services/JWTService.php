@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Carbon\Carbon;
-
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -44,11 +44,18 @@ class JWTService
      * Validate token.
      * 
      * @param string $token
-     * @return bool
      */
-    public static function validateToken(string $token): bool
+    public static function validateToken(string $token)
     {
-        $decoded_token = JWT::decode($token, new Key(env("APP_KEY"), 'HS256'));
+        $decoded_token = null;
+
+        try {
+            $decoded_token = JWT::decode($token, new Key(env("APP_KEY"), 'HS256'));
+        } catch (Exception $e) {
+            // handle exception
+            return false;
+        }
+        
 
         if ($decoded_token->iss !== env('APP_URL') ||
             $decoded_token->nbf > Carbon::now()->timestamp ||
