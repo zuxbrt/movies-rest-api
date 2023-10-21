@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\Pagination;
 use App\Http\Controllers\Controller;
+use App\Models\Movie;
 use Illuminate\Http\Request;
 
 class MoviesController extends Controller
@@ -19,10 +21,20 @@ class MoviesController extends Controller
      */
     public function all(Request $request)
     {
-        // get movies logic
-        // pagination
-        // query filters (name, created_at)
-        return response()->json('Movies', 200);
+        $pagination = new Pagination(Movie::class);
+        if(isset($request->page) && isset($request->results) && isset($request->orderby) && isset($request->order)){
+            $data = $pagination->paginate(
+                $request->page, 
+                $request->results,
+                $request->orderby,
+                $request->order,
+                isset($request->search) ? $request->search : null
+            );
+            return response()->json($data, 200);
+        } else {
+            return response()->json(Movie::all(), 200);
+        }
+        
     }
 
 
