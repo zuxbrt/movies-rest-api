@@ -12,10 +12,10 @@ class MoviesSeeder extends Seeder
      */
     public function run(): void
     {
-        for($i = 1; $i <= 100; $i++){
-            Movie::create([
+        // for($i = 1; $i <= 100; $i++){
+        //     Movie::create([
 
-            ]);
-        }
+        //     ]);
+        // }
     }
 }
