@@ -5,20 +5,15 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\JWTService;
-use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    private $jwtService;
 
-    public function __construct()
-    {
-        // $this->middleware('');
-        $this->jwtService = new JWTService();
-    }
+    public function __construct() {}
 
 
     /**
@@ -27,8 +22,26 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // register logic
-        dd('register', $request->all());
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'string', 'min:8']
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages()->all(), 400);
+        }
+
+        $user = User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
+        ]);
+    
+        return response()->json([
+            'token' => JWTService::getTokenForUser($user),
+            'user'  => $user->toArray()
+        ]);
+    
     }
 
 
@@ -39,7 +52,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // login logic
         $validator = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required'
@@ -55,8 +67,8 @@ class AuthController extends Controller
         if(Hash::check($request->password, $user->password)){
             
            return response()->json([
-                'token' => $this->jwtService->getEncodedTokenForUser($user),
-                'user'  => $user->email
+                'token' => JWTService::getTokenForUser($user),
+                'user'  => $user->toArray()
            ]);
 
         } else {
@@ -64,14 +76,11 @@ class AuthController extends Controller
         }
     }
 
-    
-
     /**
-     * Remove JWT credentials.
+     * Refresh JWT in case of expiry.
      */
-    public function logout(Request $request)
+    public function refreshToken(Request $request)
     {
-        // logout logic
-        dd('logout', $request->all());
+        //
     }
 }

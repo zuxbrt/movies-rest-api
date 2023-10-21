@@ -9,7 +9,7 @@ class MoviesController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('');
+        $this->middleware('auth-api');
     }
 
 
@@ -17,11 +17,12 @@ class MoviesController extends Controller
      * Get movies.
      * @param Request $request
      */
-    public function getMovies(Request $request)
+    public function all(Request $request)
     {
         // get movies logic
         // pagination
         // query filters (name, created_at)
+        return response()->json('Movies', 200);
     }
 
 
@@ -30,7 +31,7 @@ class MoviesController extends Controller
      * Get single movie.
      * @param string $slug
      */
-    public function getMovie(string $slug)
+    public function single(string $slug)
     {
         // get movie logic
     }

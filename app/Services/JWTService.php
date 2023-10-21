@@ -10,20 +10,24 @@ use Firebase\JWT\Key;
 
 class JWTService
 {
+    # https://github.com/firebase/php-jwt
+    # https://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#RegisteredClaimName
+
+
     /**
      * Form JWT for user.
      * 
      * @param User $user
      * @return string $jwt
      */
-    public function getEncodedTokenForUser(User $user): string
+    public static function getTokenForUser(User $user): string
     {
         $key = env('APP_KEY');
         $payload = [
-            'iss'   => env('APP_URL', 'localhost:8000'),      // issuer claim
-            'nbf'   => Carbon::now()->timestamp,              // not before
-            'iat'   => Carbon::now()->timestamp,              // issued at
-            'exp'   => Carbon::now()->addWeek()->timestamp,   // expires (week),
+            'iss'   => env('APP_URL'),                      // issuer claim
+            'nbf'   => Carbon::now()->timestamp,            // not before
+            'iat'   => Carbon::now()->timestamp,            // issued at
+            'exp'   => Carbon::now()->addWeek()->timestamp, // expires (in a week),
             'email' => $user->email
         ];
 
@@ -31,9 +35,28 @@ class JWTService
         $headers = null;
         $jwt = JWT::encode($payload, $key, 'HS256', null, $headers);
 
-        // $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
-        // print_r($decoded);
-
         return $jwt;
+    }
+
+
+
+    /**
+     * Validate token.
+     * 
+     * @param string $token
+     * @return bool
+     */
+    public static function validateToken(string $token): bool
+    {
+        $decoded_token = JWT::decode($token, new Key(env("APP_KEY"), 'HS256'));
+
+        if ($decoded_token->iss !== env('APP_URL') ||
+            $decoded_token->nbf > Carbon::now()->timestamp ||
+            $decoded_token->exp < Carbon::now()->timestamp )
+        {
+            return false;
+        }
+
+        return true;
     }
 }
