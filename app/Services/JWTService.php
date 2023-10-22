@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -28,7 +29,7 @@ class JWTService
             'nbf'   => Carbon::now()->timestamp,            // not before
             'iat'   => Carbon::now()->timestamp,            // issued at
             'exp'   => Carbon::now()->addWeek()->timestamp, // expires (in a week),
-            'user'  => str_replace(" ", "", $user->name),
+            'user'  => $user->id,
         ];
 
         // Encode headers in the JWT string - currently empty
@@ -60,6 +61,7 @@ class JWTService
             return false;
         }
 
+
         if ($decoded_token->iss !== env('APP_URL') ||
             $decoded_token->nbf > Carbon::now()->timestamp ||
             $decoded_token->exp < Carbon::now()->timestamp )
@@ -67,6 +69,30 @@ class JWTService
             return false;
         }
 
+        // handle non existing user
+        if(!User::find($decoded_token->user)) return false;
+
         return true;
+    }
+
+
+
+    /**
+     * Extract user id from JWT token.
+     * ## NOTE:
+     * ### Before calling this function, the token is already
+     * ### being validated by the middleware - so we are skipping
+     * ### any token validation.
+     * 
+     * @param Request $request
+     */
+    public static function getUserFromToken(Request $request)
+    {
+        $authorization_header = $request->header('Authorization');
+        preg_match('/Bearer\s(\S+)/', $authorization_header, $matches);
+        $token = $matches[1];
+        $decoded_token = JWT::decode($token, new Key(env("APP_KEY"), 'HS256'));
+        $user = User::find($decoded_token->user);
+        return $user;
     }
 }

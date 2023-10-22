@@ -23,14 +23,14 @@ class MoviesSeeder extends Seeder
     
             foreach($resp as $single_movie){
                 Movie::create([
-                    'name' => $single_movie['Title'],
+                    'title' => $single_movie['Title'],
                     'slug' => Str::slug(strtolower($single_movie['Title'])),
                 ]);
             }
         } catch (Exception $e) {
             for($i = 1; $i <= 30; $i++){
                 Movie::create([
-                    'name' => "Movie " . $i,
+                    'title' => "Movie " . $i,
                     'slug' => Str::slug(strtolower("Movie " . $i)),
                 ]);
             }

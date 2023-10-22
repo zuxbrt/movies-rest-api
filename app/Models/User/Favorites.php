@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
 
+use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Movie extends Model
+class Favorites extends Model
 {
     use HasFactory;
 
-    protected $table = 'movies';
+    protected $table = 'user_favorite_movies';
 
     /**
      * The attributes that are mass assignable.
@@ -17,8 +19,8 @@ class Movie extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
-        'slug'
+        'user_id',
+        'movie_id'
     ];
 
     /**
@@ -27,8 +29,19 @@ class Movie extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'slug',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'user_id',
+        'movie_id'
     ];
+
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

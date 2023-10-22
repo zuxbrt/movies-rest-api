@@ -10,7 +10,9 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {           
+        // not using laravel sanctum
+        return;
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\MoviesController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\User\FavoritesController;
+use App\Http\Controllers\API\User\FollowingController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,8 +24,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+// Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::group(['prefix' => 'movies'], function(){
-    Route::get('/', [MoviesController::class, 'all']);
+Route::group(['middleware' => 'auth-api'], function(){
+
+    Route::group(['prefix' => 'movies'], function(){
+        Route::get('/', [MoviesController::class, 'movies']);
+        Route::post('/', [MoviesController::class, 'addMovie']);
+        Route::put('/', [MoviesController::class, 'updateMovie']);
+        Route::delete('/', [MoviesController::class, 'deleteMovie']);
+    });
+
+    Route::group(['prefix' => 'favorites'], function(){
+        Route::get('/', [FavoritesController::class, 'favorites']);
+        Route::post('/', [FavoritesController::class, 'add']);
+        Route::delete('/', [FavoritesController::class, 'remove']);
+    });
+
+    Route::group(['prefix' => 'following'], function(){
+        Route::get('/', [FollowingController::class, 'following']);
+        Route::post('/', [FollowingController::class, 'follow']);
+        Route::delete('/', [FollowingController::class, 'unfollow']);
+    });
 });
+

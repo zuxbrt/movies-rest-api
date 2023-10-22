@@ -6,20 +6,22 @@ use App\Helpers\Pagination;
 use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class MoviesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth-api');
+        //
     }
 
 
     /**
-     * Get movies.
+     * Get movies or single movie depending on params sent in the request.
      * @param Request $request
      */
-    public function all(Request $request)
+    public function movies(Request $request)
     {
         $pagination = new Pagination(Movie::class);
         if(isset($request->page) && isset($request->results) && isset($request->orderby) && isset($request->order)){
@@ -31,21 +33,14 @@ class MoviesController extends Controller
                 isset($request->search) ? $request->search : null
             );
             return response()->json($data, 200);
+        } else if (isset($request->slug)) {
+            $movie = Movie::where('slug', $request->slug)->first();
+            if($movie) return response()->json($movie, 200);
+            return response()->json([], 404);
         } else {
             return response()->json(Movie::all(), 200);
         }
         
-    }
-
-
-
-    /**
-     * Get single movie.
-     * @param string $slug
-     */
-    public function single(string $slug)
-    {
-        // get movie logic
     }
 
 
@@ -56,7 +51,23 @@ class MoviesController extends Controller
      */
     public function addMovie(Request $request)
     {
-        // add movie logic
+        $validator = Validator::make($request->all(), [
+            'title' => ['required', 'string', 'min:5'],
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages()->all(), 400);
+        }
+
+        $alreadyExists = Movie::where('title', $request->title)->get();
+        if(!$alreadyExists->isEmpty()) return response()->json('Movie with that title already exists.', 400);
+
+        $movie = Movie::create([
+            'title' => $request->title, 
+            'slug' => Str::slug(strtolower($request->title))
+        ]);
+
+        return response()->json($movie, 200);
     }
 
 
@@ -67,17 +78,42 @@ class MoviesController extends Controller
      */
     public function updateMovie(Request $request)
     {
-        // update movie logic
+        $validator = Validator::make($request->all(), [
+            'id'    => ['required'],
+            'title'  => ['required', 'string', 'min:5'],
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages()->all(), 400);
+        }
+
+        $movie = Movie::find($request->id);
+        if(!$movie) return response()->json('Not found', 404);
+
+        $alreadyExists = Movie::where('title', $request->title)->get();
+        if(!$alreadyExists->isEmpty()) return response()->json('Movie with that title already exists.', 400);
+        
+        $movie->title   = $request->title;
+        $movie->slug    = Str::slug(strtolower($request->title));
+        $movie->save();
+
+        return response()->json($movie, 200);
     }
 
 
 
     /**
      * Delete movie.
-     * @param int $id
+     * @param Request $request
      */
-    public function deleteMovie(int $id)
+    public function deleteMovie(Request $request)
     {
-        // delete movie logic
+        if(!isset($request->id)) return response()->json('Bad request', 400);
+
+        $movie = Movie::find($request->id);
+        if(!$movie) return response()->json('Not found', 404);
+
+        $movie->delete();
+        return response()->json('Deleted.', 200);
     }
 }
