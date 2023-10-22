@@ -72,15 +72,15 @@ class AuthController extends Controller
            ]);
 
         } else {
-            return response()->json('The password you typed was not correct.', 401);
+            return response()->json("Incorrect password.", 401);
         }
     }
 
     /**
      * Refresh JWT in case of expiry.
      */
-    public function refreshToken(Request $request)
-    {
-        //
-    }
+    // public function refreshToken(Request $request)
+    // {
+    //     //
+    // }
 }

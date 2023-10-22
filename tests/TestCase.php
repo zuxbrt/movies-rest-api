@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->faker = Factory::create();
-        Artisan::call('migrate:fresh');
+        Artisan::call('migrate:fresh --seed');
     }
 
     public function __get($key)

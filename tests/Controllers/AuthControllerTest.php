@@ -2,6 +2,7 @@
 
 namespace Tests\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
@@ -17,15 +18,30 @@ class AuthControllerTest extends TestCase
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure(
             [
-                'token' => "*",
+                'token',
                 "user"  => [
-                    "id" => "*",
-                    "name" => "*",
-                    "email" => "*"
+                    "id" ,
+                    "name",
+                    "email"
                 ]
             ]
         );
     }
+
+
+
+    public function testCanUserLoginWithInvalidCredentials()
+    {
+        $this->json('post', '/api/login', 
+        [
+            "email" => "test@live.com",
+            "password" => "test1234t"
+        ])
+        ->assertStatus(Response::HTTP_UNAUTHORIZED)
+        ->assertContent('"Incorrect password."');
+    }
+
+
 
     public function testCanUserRegister()
     {
@@ -38,13 +54,24 @@ class AuthControllerTest extends TestCase
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure(
             [
-                'token' => "*",
+                'token',
                 "user"  => [
-                    "id" => "*",
-                    "name" => "*",
-                    "email" => "*"
+                    "id" ,
+                    "name",
+                    "email"
                 ]
             ]
         );
+    }
+
+
+
+    public function canRegisterWithInvalidParameters()
+    {
+        // $this->json('post', '/api/register', 
+        // [
+        //     "random" => "parameter"
+        // ])->assertStatus(Response::HTTP_BAD_REQUEST)
+        // ->assertJsonStructure(['*', '*']);
     }
 }
