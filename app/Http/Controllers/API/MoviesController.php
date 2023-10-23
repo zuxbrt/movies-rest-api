@@ -21,6 +21,7 @@ class MoviesController extends Controller
     public function movies(Request $request)
     {
         $pagination = new Pagination(Movie::class);
+        // validation - numbers as zeros / negative values and order 
         if(isset($request->page) && isset($request->results) && isset($request->orderby) && isset($request->order)){
             $data = $pagination->paginate(
                 $request->page, 
