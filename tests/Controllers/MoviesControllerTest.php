@@ -24,7 +24,8 @@ class MoviesControllerTest extends TestCase
 
     public function testCanGetMovieBySlug()
     {
-        $this->json('get', 'api/movies', ['slug' => 'avatar'], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        $movie = Movie::first();
+        $this->json('get', 'api/movies', ['slug' => $movie->slug], ['authorization' => 'Bearer ' . $this->JWTtoken ])
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure([
             "id", "title"
@@ -62,7 +63,7 @@ class MoviesControllerTest extends TestCase
     {
         $this->json('post', '/api/movies', 
         [
-            "title" => $this->faker->realText(10),
+            "title" => $this->faker->realText(10) . ' - ' . $this->faker->realText(10),
         ], ['authorization' => 'Bearer ' . $this->JWTtoken ])
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure(["title", "id"]);
@@ -88,10 +89,10 @@ class MoviesControllerTest extends TestCase
         $this->json('put', '/api/movies', 
         [
             "id" => $movie->id,
-            "title" => $this->faker->realText(10),
+            "title" => $movie->title . $this->faker->realText(10),
         ], ['authorization' => 'Bearer ' .$this->JWTtoken ])
         ->assertStatus(Response::HTTP_OK)
-        ->assertJsonStructure(["title", "id"]);
+        ->assertJsonStructure(["id", "title"]);
     }
 
 
