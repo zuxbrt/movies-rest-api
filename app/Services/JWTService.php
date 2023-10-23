@@ -45,17 +45,14 @@ class JWTService
      * Validate token.
      * 
      * @param string $token
-     * @return int $status
+     * @return bool $status
      */
-    public static function validateToken(string $token): int
+    public static function validateToken(string $token): bool
     {
         $decoded_token = null;
 
         try {
             $decoded_token = JWT::decode($token, new Key(env("APP_KEY"), 'HS256'));
-        } catch (\Firebase\JWT\ExpiredException $e) {
-            // exipred token
-            return false;
         } catch (Exception $e) {
             // invalid signature
             return false;

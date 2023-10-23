@@ -19,17 +19,17 @@ class APIAuthMiddleware
         $authorization_header = $request->header('Authorization');
 
         if(!$authorization_header){
-            return response()->json('Unauthorized.', 403);
+            return response()->json('Unauthorized.', 401);
         } else {
             if (! preg_match('/Bearer\s(\S+)/', $authorization_header, $matches)) {
                 return response()->json('Bad request.', 400);
             }
 
-            if(!$matches[1]){
+            $token = $matches[1];
+
+            if(!$token){
                 return response()->json('Bad request.', 400);
             } else {
-                $token = $matches[1];
-
                 $token_valid = JWTService::validateToken($token);
                 if(!$token_valid) return response()->json('Unauthorized.', 401);
             }            

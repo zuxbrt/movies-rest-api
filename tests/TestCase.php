@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\User;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
@@ -15,6 +16,7 @@ abstract class TestCase extends BaseTestCase
 
     private Generator $faker;
     private string $token;
+    private User $user;
 
     public function setUp(): void
     {
@@ -24,12 +26,14 @@ abstract class TestCase extends BaseTestCase
         Artisan::call('cache:clear');
         Artisan::call('migrate:fresh --seed');
 
+        // log in as seeded default user
         $response = $this->json('post', '/api/login', 
         [
             "email" => "test@live.com",
             "password" => "test1234"
         ]);
-        
+
+        $this->user = User::first();
         $this->token = $response['token'];
     }
 
@@ -40,6 +44,9 @@ abstract class TestCase extends BaseTestCase
         }
         if($key === 'JWTtoken'){
             return $this->token;
+        }
+        if($key === 'user'){
+            return $this->user;
         }
         throw new Exception('Unknown key requested');
     }

@@ -39,7 +39,7 @@ class DataSeeder extends Seeder
             $index = 1;
 
             foreach($movies as $movie){
-                if($index % 10 === 0){
+                if($index % 2 === 0){
                     // skip observer event triggers on create
                     Favorites::withoutEvents(function() use ($movie, $user){
                         Favorites::create([
@@ -49,7 +49,7 @@ class DataSeeder extends Seeder
                     });
                 }
 
-                if($index % 15 === 0){
+                if($index % 4 === 0){
                     Following::create([
                         'movie_id'  => $movie->id,
                         'user_id'   => $user->id

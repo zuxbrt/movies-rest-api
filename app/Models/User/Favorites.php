@@ -39,9 +39,4 @@ class Favorites extends Model
     {
         return $this->belongsTo(Movie::class);
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }
