@@ -32,10 +32,11 @@ class AuthControllerTest extends TestCase
 
     public function testCanUserLoginWithInvalidCredentials()
     {
+        $user = User::first();
         $this->json('post', '/api/login', 
         [
-            "email" => "test@live.com",
-            "password" => "test1234t"
+            "email" => $user->email,
+            "password" => $this->faker->password
         ])
         ->assertStatus(Response::HTTP_UNAUTHORIZED)
         ->assertContent('"Incorrect password."');
@@ -47,9 +48,9 @@ class AuthControllerTest extends TestCase
     {
         $this->json('post', '/api/register', 
         [
-            "name" => "haso hasic",
-            "email" => "haso@live.com",
-            "password" => "haso4321"
+            "name" => $this->faker->name,
+            "email" => $this->faker->email,
+            "password" => $this->faker->password(8)
         ])
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure(
@@ -66,12 +67,25 @@ class AuthControllerTest extends TestCase
 
 
 
-    public function canRegisterWithInvalidParameters()
+    public function testCanRegisterWithInvalidParameters()
     {
-        // $this->json('post', '/api/register', 
-        // [
-        //     "random" => "parameter"
-        // ])->assertStatus(Response::HTTP_BAD_REQUEST)
-        // ->assertJsonStructure(['*', '*']);
+        $this->json('post', '/api/register', 
+        [
+            "random" => "parameter"
+        ])
+        ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonValidationErrors(['email', 'password'], null);
+    }
+
+
+
+    public function testLoginWithInvalidParameters()
+    {
+        $this->json('post', '/api/login', 
+        [
+            "random" => "parameter"
+        ])
+        ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+        ->assertJsonValidationErrors(['email', 'password'], null);
     }
 }

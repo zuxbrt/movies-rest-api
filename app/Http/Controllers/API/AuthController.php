@@ -28,7 +28,7 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->messages()->all(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $user = User::create([
@@ -58,7 +58,7 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->messages()->all(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $user = User::where('email', $request->email)->first();

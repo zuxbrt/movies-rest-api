@@ -6,6 +6,7 @@ namespace App\Http\Controllers\API\User;
 use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use App\Models\User\Favorites;
+use App\Services\CachingService;
 use App\Services\JWTService;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,9 @@ class FavoritesController extends Controller
      */
     public function favorites(Request $request)
     {
+        $cached = CachingService::getCachedFavorites();
+        if($cached) return response()->json($cached, 200);
+
         $user = JWTService::getUserFromToken($request);
         return response()->json($user->favorites(), 200);
     }

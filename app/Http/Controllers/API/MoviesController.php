@@ -11,10 +11,7 @@ use Illuminate\Support\Str;
 
 class MoviesController extends Controller
 {
-    public function __construct()
-    {
-        //
-    }
+    public function __construct() {}
 
 
     /**
@@ -56,7 +53,7 @@ class MoviesController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->messages()->all(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $alreadyExists = Movie::where('title', $request->title)->get();
@@ -84,7 +81,7 @@ class MoviesController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->messages()->all(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $movie = Movie::find($request->id);
