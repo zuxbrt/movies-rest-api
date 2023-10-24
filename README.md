@@ -23,9 +23,9 @@ This API is using the JWT authentication method (not laravel/sanctum package, bu
 
 Generated token string validity can be tested at the [JWT.io debbuger](https://jwt.io/)
 
-Token generation and validation is in the [JWTService.php](app\Services\JWTService.php)
+Token generation and validation is in the [JWTService.php](app/\Services/\JWTService.php)
 
-Middleware applied to the routes in the API group - [APIAuthMiddleware.php](app\Http\Middleware\APIAuthMiddleware.php)
+Middleware applied to the routes in the API group - [APIAuthMiddleware.php](app/\Http/\Middleware/\APIAuthMiddleware.php)
 
 ## CORS
 <p>Current config/cors.php:</p>
