@@ -2,7 +2,6 @@
 
 namespace Tests\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 

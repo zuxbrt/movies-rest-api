@@ -15,11 +15,12 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'], // all for now
+    'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000'), 'http://127.0.0.1:8080'],
+    // 'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000')],
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +30,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];

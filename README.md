@@ -19,14 +19,15 @@ In order to run tests on your machine, it's neccessary:
 - run following command: **composer test**, which will generate html coverage report in /tests/coverage
 
 ## CORS
-<p>Current CORS settings are:</p>
+<p>Current config/cors.php:</p>
 
 ```
-'paths' => ['api/*'],
+'paths' => ['*'],
 
 'allowed_methods' => ['*'],
 
-'allowed_origins' => ['*'], // all for now
+'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000'), 'http://127.0.0.1:8080'],
+// 'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000')],
 
 'allowed_origins_patterns' => [],
 
@@ -36,8 +37,15 @@ In order to run tests on your machine, it's neccessary:
 
 'max_age' => 0,
 
-'supports_credentials' => false,
+'supports_credentials' => true,
 ```
+
+In order to test CORS, you can do the following:
+- comment the first **'allowed_origins'** line and remove the comment for **'allowed_origins'** below
+- run command **php artisan config:cache** so that the changed CORS config is applied to the application
+- host the application on desired *APP_URL*
+- host another instance of the application by running command: **php artisan serve --port=8080**
+- open URL of the another instance of the application in browser to test the CORS via simple form (via XMLHttpRequest)
 
 ## Caching
 ```
