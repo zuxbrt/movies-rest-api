@@ -10,6 +10,7 @@ use Faker\Generator;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class DataSeeder extends Seeder
 {
@@ -56,5 +57,7 @@ class DataSeeder extends Seeder
 
             $index++;
         }
+
+        Cache::put($user->id, $user->favorites());
     }
 }

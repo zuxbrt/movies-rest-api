@@ -5,6 +5,7 @@ namespace Tests\Controllers;
 use App\Models\Movie;
 use App\Models\User\Favorites;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class FavoritesControllerTest extends TestCase
@@ -14,6 +15,16 @@ class FavoritesControllerTest extends TestCase
     
     public function testCanGetFavorites()
     {
+        $this->json('get', 'api/favorites', [], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJsonStructure([]);
+    }
+
+
+
+    public function testCanGetFavoritesNonCached()
+    {
+        Artisan::call('cache:clear');
         $this->json('get', 'api/favorites', [], ['authorization' => 'Bearer ' . $this->JWTtoken ])
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonStructure([]);
