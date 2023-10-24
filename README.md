@@ -53,8 +53,8 @@ Middleware applied to the routes in the API group - [APIAuthMiddleware.php](/app
 
 In order to test CORS, you can do the following:
 - comment the second value in the **'allowed_origins'** array
-- run command **php artisan config:cache** so that the changed CORS config is applied to the application
 - host the application on desired *APP_URL*
+- run command **php artisan config:cache** so that the changed CORS config is applied to the application
 - host another instance of the application by running command: **php artisan serve --port=8080**
 - open URL of the another instance of the application in browser
 - use form to test access to the application from another port
