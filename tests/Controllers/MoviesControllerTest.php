@@ -59,6 +59,54 @@ class MoviesControllerTest extends TestCase
 
 
 
+    public function testCanGetPaginatedResultsWithInvalidOrder()
+    {
+        $this->json('get', 'api/movies', [
+            'page' => $this->faker->randomNumber(),
+            'results' => $this->faker->randomNumber(),
+            'orderby' => 'id',
+            'order' => $this->faker->word()
+        ], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        ->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
+
+
+
+    public function testCanGetPaginatedResultsWithInvalidOrderColumn()
+    {
+        $this->json('get', 'api/movies', [
+            'page' => $this->faker->randomNumber(),
+            'results' => $this->faker->randomNumber(),
+            'orderby' => $this->faker->word(),
+            'order' => 'desc'
+        ], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        ->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
+
+
+
+    public function testCanGetPaginatedResultsWithInvalidPage()
+    {
+        $this->json('get', 'api/movies', [
+            'page' => $this->faker->numberBetween(-100, 0),
+            'results' => 1,
+            'orderby' => $this->faker->word(),
+            'order' => 'desc'
+        ], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        ->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function testCanGetPaginatedResultsWithInvalidResultsCount()
+    {
+        $this->json('get', 'api/movies', [
+            'page' => $this->faker->numberBetween(-100, 0),
+            'results' => 5,
+            'orderby' => $this->faker->word(),
+            'order' => 'desc'
+        ], ['authorization' => 'Bearer ' . $this->JWTtoken ])
+        ->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
+
     public function testCanAddAMovie()
     {
         $this->json('post', '/api/movies', 

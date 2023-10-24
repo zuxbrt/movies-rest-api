@@ -23,9 +23,9 @@ class APIAuthMiddlewareTest extends TestCase
         ->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 
-    public function testMissingStringTokenInAuthorizationHeader()
+    public function testMissingTokenInAuthorizationHeader()
     {
-       $this->json('get', 'api/movies', [], ['authorization' => 'Bearer'])
+       $this->json('get', 'api/movies', [], ['authorization' => 'Bearer' . '&nbsp;' . '&nbsp;'])
         ->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 }

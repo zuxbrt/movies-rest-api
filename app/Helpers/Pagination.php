@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class Pagination
 {
-    public $model;
+    private $model;
 
     public function __construct($model)
     {
@@ -26,6 +26,17 @@ class Pagination
     {
         $model = new $this->model;
         $searchColumns = $model->getFillable();
+
+        $orderTypes = ['asc', 'desc'];
+        $orderByOptions = $model->getFillable();
+        array_push($orderByOptions, 'id');
+
+        if(!in_array(strtolower($order), $orderTypes)) return false;
+        if(!in_array(strtolower($orderBy), $orderByOptions)) return false;
+
+        if($page < 1) return false;
+        if($numberOfResults < 1) return false;
+        
 
         $allItems = $this->model::orderBy($orderBy, $order)
                 ->skip($page * $numberOfResults - $numberOfResults)
