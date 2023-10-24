@@ -18,6 +18,15 @@ In order to run tests on your machine, it's neccessary:
 - make sure you have xdebug extension enabled and configured
 - run following command: **composer test**, which will generate html coverage report in /tests/coverage
 
+## JWT authentication
+This API is using the JWT authentication method (not laravel/sanctum package, but rather [firebase/php-jwt](https://github.com/firebase/php-jwt) library).
+
+Generated token string validity can be tested at the [JWT.io debbuger](https://jwt.io/)
+
+Token generation and validation is in the [JWTService.php](app\Services\JWTService.php)
+
+Middleware applied to the routes in the API group - [APIAuthMiddleware.php](app\Http\Middleware\APIAuthMiddleware.php)
+
 ## CORS
 <p>Current config/cors.php:</p>
 
@@ -26,8 +35,10 @@ In order to run tests on your machine, it's neccessary:
 
 'allowed_methods' => ['*'],
 
-'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000'), 'http://127.0.0.1:8080'],
-// 'allowed_origins' => [env('APP_URL', 'http://127.0.0.1:8000')],
+'allowed_origins' => [
+    env('APP_URL', 'http://127.0.0.1:8000'),
+    'http://127.0.0.1:8080'
+],
 
 'allowed_origins_patterns' => [],
 
@@ -41,11 +52,12 @@ In order to run tests on your machine, it's neccessary:
 ```
 
 In order to test CORS, you can do the following:
-- comment the first **'allowed_origins'** line and remove the comment for **'allowed_origins'** below
+- comment the second value in the **'allowed_origins'** array
 - run command **php artisan config:cache** so that the changed CORS config is applied to the application
 - host the application on desired *APP_URL*
 - host another instance of the application by running command: **php artisan serve --port=8080**
-- open URL of the another instance of the application in browser to test the CORS via simple form (via XMLHttpRequest)
+- open URL of the another instance of the application in browser
+- use form to test access to the application from another port
 
 ## Caching
 ```

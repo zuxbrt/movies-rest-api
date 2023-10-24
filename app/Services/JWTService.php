@@ -12,7 +12,7 @@ use Firebase\JWT\Key;
 class JWTService
 {
     # https://github.com/firebase/php-jwt
-    # https://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#RegisteredClaimName
+    # https://self-issued.info/docs/draft-ietf-oauth-json-web-token.html
 
 
     /**

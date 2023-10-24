@@ -97,6 +97,8 @@
 
         function testCORS(){
 
+            if(!document.getElementById('url').value) return;
+
             document.getElementById('response').classList.add('hidden');
 
             const xhttp = new XMLHttpRequest();
