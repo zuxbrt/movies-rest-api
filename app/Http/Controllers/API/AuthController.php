@@ -75,12 +75,4 @@ class AuthController extends Controller
             return response()->json("Incorrect password.", 401);
         }
     }
-
-    /**
-     * Refresh JWT in case of expiry.
-     */
-    // public function refreshToken(Request $request)
-    // {
-    //     //
-    // }
 }

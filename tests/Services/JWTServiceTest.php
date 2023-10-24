@@ -8,9 +8,6 @@ use Tests\TestCase;
 
 class JWTServiceTest extends TestCase
 {
-
-
-
     public function testGetMoviesWithInvalidJWT()
     {
        $this->json('get', 'api/movies', [], ['authorization' => 'Bearer ' . $this->faker->realText(45) ])

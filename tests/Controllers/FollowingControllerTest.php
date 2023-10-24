@@ -11,7 +11,7 @@ class FollowingControllerTest extends TestCase
 {
 
 
-
+    
     public function testCanGetFollowing()
     {
         $this->json('get', 'api/following', [], ['authorization' => 'Bearer ' . $this->JWTtoken ])

@@ -10,7 +10,7 @@ class MoviesControllerTest extends TestCase
 {
 
 
-
+    
     public function testCanGetAllMovies()
     {
         $this->json('get', 'api/movies', [], ['authorization' => 'Bearer ' . $this->JWTtoken ])
@@ -144,6 +144,7 @@ class MoviesControllerTest extends TestCase
     }
 
 
+
     public function testUpdateMovieWithInvalidParameters()
     {
         $movie = Movie::first();
@@ -156,6 +157,7 @@ class MoviesControllerTest extends TestCase
         ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
         ->assertJsonValidationErrors(['title'], null);
     }
+
 
 
     public function testCanDeleteAMovie()

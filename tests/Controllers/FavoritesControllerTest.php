@@ -11,7 +11,7 @@ class FavoritesControllerTest extends TestCase
 {
 
 
-
+    
     public function testCanGetFavorites()
     {
         $this->json('get', 'api/favorites', [], ['authorization' => 'Bearer ' . $this->JWTtoken ])
